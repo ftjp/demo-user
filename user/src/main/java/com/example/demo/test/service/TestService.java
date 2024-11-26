@@ -2,7 +2,8 @@ package com.example.demo.test.service;
 
 import com.example.demo.infruastructure.util.DataRedisOptionService;
 import com.example.demo.infruastructure.util.DataRedisOptionUtil;
-import com.example.demo.user.UserInfo;
+import com.example.demo.user.domain.entity.UserInfo;
+import com.example.demo.user.dto.UserInfoDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -29,13 +30,11 @@ public class TestService {
         dataRedisOptionService.set("testSet", "testSet");
         String test = (String) dataRedisOptionService.get("test");
         // 保存对象
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUsername("test");
-        userInfo.setPassword("123");
-        userInfo.setAge(12);
-        userInfo.setEmail("test@qq.com");
+        UserInfoDto userInfo = new UserInfoDto();
+        userInfo.setUserName("test");
+        userInfo.setUserPwd("123");
         dataRedisOptionService.set("userInfo", userInfo);
-        UserInfo userInfoFormRedis = (UserInfo) dataRedisOptionService.get("userInfo");
+        UserInfoDto userInfoFormRedis = (UserInfoDto) dataRedisOptionService.get("userInfo");
         System.out.println(userInfoFormRedis);
         dataRedisOptionService.del("testSet", "userInfo");
         return test;

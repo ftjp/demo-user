@@ -1,7 +1,7 @@
 package com.example.demo.filter;
 
 import com.example.demo.infruastructure.util.TokenUtil;
-import com.example.demo.user.CustomUserDetailsService;
+import com.example.demo.auth.CustomUserDetailsService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

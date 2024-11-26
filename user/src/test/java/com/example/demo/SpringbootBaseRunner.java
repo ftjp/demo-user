@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 
-@SpringBootTest(classes = DemoApplication.class)
+@SpringBootTest(classes = UserApplication.class)
 @RunWith(SpringRunner.class)
 @Transactional
 public class SpringbootBaseRunner {

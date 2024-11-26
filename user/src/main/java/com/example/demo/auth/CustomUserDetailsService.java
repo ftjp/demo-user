@@ -1,7 +1,9 @@
-package com.example.demo.user;
+package com.example.demo.auth;
 
+import cn.hutool.core.collection.CollUtil;
 import com.example.demo.infruastructure.exception.BaseCustomException;
-import com.google.common.collect.Lists;
+import com.example.demo.user.domain.entity.Role;
+import com.example.demo.user.domain.entity.UserInfo;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,7 +11,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     static {
 //        userInfoMap.put("admin", new UserInfo().setUsername("admin").setPassword("$2a$10$FRy27hJLMoKYp0ZgpTWRmeqQvQAxuSioP71oEvjY.7qL0WQqk9sfK").setRoles(Lists.newArrayList(new Role().setRoleName("ADMIN"))));
-        userInfoMap.put("admin", new UserInfo().setUsername("admin").setPassword("123456").setRoles(Lists.newArrayList(new Role().setRoleName("ADMIN"))));
+        userInfoMap.put("admin", new UserInfo().setUserName("admin").setUserPwd("123456"));
     }
 
     @Override
@@ -32,14 +36,14 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
         UserInfo userInfo = userInfoMap.get(username);
         return new org.springframework.security.core.userdetails.User(
-                userInfo.getUsername(),
-                userInfo.getPassword(),
-                getAuthorities(userInfo)
+                userInfo.getUserName(),
+                userInfo.getUserPwd(),
+                getAuthorities(CollUtil.newArrayList(new Role().setRoleName("ADMIN")))
         );
     }
 
-    private Collection<? extends GrantedAuthority> getAuthorities(UserInfo userInfo) {
-        List<SimpleGrantedAuthority> authorities = userInfo.getRoles().stream()
+    private Collection<? extends GrantedAuthority> getAuthorities(List<Role> roleList) {
+        List<SimpleGrantedAuthority> authorities = roleList.stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRoleName()))
                 .collect(Collectors.toList());
         return authorities;

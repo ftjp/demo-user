@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
  * @date: 2024/10/31 9:49
  */
 @Accessors(chain = true)
-@Table(name = "t_sm_task")
+@Table(name = "retry_task")
 @Entity
 @Data
 public class RetryTask {

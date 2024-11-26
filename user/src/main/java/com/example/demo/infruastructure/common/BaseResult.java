@@ -15,6 +15,8 @@ public class BaseResult<T> {
     private T data;
 
     public BaseResult() {
+        this.code = BaseResultEnum.SUCCESS.getCode();
+        this.msg = BaseResultEnum.SUCCESS.getMsg();
     }
 
     public BaseResult(String code, String msg) {
