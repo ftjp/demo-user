@@ -77,7 +77,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/login")
                 .usernameParameter("username")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/demo/test/test")
                 .successHandler(customAuthenticationSuccessHandler)
                 .failureHandler(customAuthenticationFailureHandler);
 
@@ -87,6 +86,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/login.html");
 
         http.authorizeRequests()
+                .antMatchers("/**").permitAll()
                 .antMatchers("/demo/test/test/**").permitAll()
                 .antMatchers("/test/**").permitAll()
                 .antMatchers("/api/public/**").permitAll()

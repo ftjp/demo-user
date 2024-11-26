@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 
 
 @RestController
-@RequestMapping("/demo/test")
+@RequestMapping("/user/test")
 @Api(tags = "test")
 @Slf4j
 public class TestController {
