@@ -1,7 +1,8 @@
 package com.example.demo.filter;
 
-import com.example.demo.infruastructure.util.TokenUtil;
+import cn.hutool.core.util.StrUtil;
 import com.example.demo.auth.CustomUserDetailsService;
+import com.example.demo.infruastructure.util.DataRedisOptionService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,24 +18,25 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class JwtRequestFilter extends OncePerRequestFilter {
+public class TokenRequestFilter extends OncePerRequestFilter {
 
     @Resource
-    private TokenUtil tokenUtil;
+    private JwtTokenUtil jwtTokenUtil;
 
     @Resource
     private CustomUserDetailsService customUserDetailsService;
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-            throws ServletException, IOException {
-        String authHeader = request.getHeader("Authorization");
+    @Resource
+    private DataRedisOptionService dataRedisOptionService;
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("bearer ")) {
             String token = authHeader.substring(7);
-            String username = tokenUtil.getUsernameFromToken(token);
-            if (username != null && tokenUtil.validateToken(token)) {
-                UserDetails userDetails = customUserDetailsService.getByAccessToken(username);
+            if (StrUtil.isNotBlank(token) && jwtTokenUtil.validateToken(token)) {
+                String accessToken = jwtTokenUtil.getAccessTokenFromJWT(token);
+                UserDetails userDetails = customUserDetailsService.getByAccessToken(accessToken);
                 if (userDetails != null) {
                     Authentication authentication = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());

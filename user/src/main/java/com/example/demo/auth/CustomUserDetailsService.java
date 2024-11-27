@@ -2,6 +2,7 @@ package com.example.demo.auth;
 
 import cn.hutool.core.collection.CollUtil;
 import com.example.demo.infruastructure.exception.BaseCustomException;
+import com.example.demo.infruastructure.util.DataRedisOptionService;
 import com.example.demo.user.domain.entity.Role;
 import com.example.demo.user.domain.entity.UserInfo;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,9 +12,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import javax.annotation.Resource;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +21,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
+
+
+    @Resource
+    private DataRedisOptionService dataRedisOptionService;
 
     private static final Map<String, UserInfo> userInfoMap = new HashMap<>();
 
@@ -35,6 +39,15 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new BaseCustomException("用户不存在");
         }
         UserInfo userInfo = userInfoMap.get(username);
+        return new org.springframework.security.core.userdetails.User(
+                userInfo.getUserName(),
+                userInfo.getUserPwd(),
+                getAuthorities(CollUtil.newArrayList(new Role().setRoleName("ADMIN")))
+        );
+    }
+
+    public UserDetails getByAccessToken(String accessToken) throws UsernameNotFoundException {
+        UserInfo userInfo = (UserInfo) dataRedisOptionService.get(accessToken);
         return new org.springframework.security.core.userdetails.User(
                 userInfo.getUserName(),
                 userInfo.getUserPwd(),

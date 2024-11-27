@@ -1,8 +1,6 @@
 package com.example.demo.config;
 
-import com.example.demo.auth.CustomAuthenticationFailureHandler;
-import com.example.demo.auth.CustomAuthenticationSuccessHandler;
-import com.example.demo.filter.JwtRequestFilter;
+import com.example.demo.filter.TokenRequestFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -22,13 +20,11 @@ import javax.annotation.Resource;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Resource
-    private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
-    @Resource
-    private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
-    @Resource
     private UserDetailsService userDetailsService;
     @Resource
-    private JwtRequestFilter jwtRequestFilter;
+    private TokenRequestFilter tokenRequestFilter;
+    @Resource
+    private PermitUrlCollector permitUrlCollector;
 
     @Override
     @Bean
@@ -70,30 +66,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         //禁用跨域保护
         http.csrf().disable();
+//
+//        //配置自定义登录页
+//        http.formLogin()
+//                .loginPage("/login.html")
+//                .loginProcessingUrl("/login")
+//                .usernameParameter("username")
+//                .passwordParameter("password")
+//                .successHandler(customAuthenticationSuccessHandler)
+//                .failureHandler(customAuthenticationFailureHandler);
 
-        //配置自定义登录页
-        http.formLogin()
-                .loginPage("/login.html")
-                .loginProcessingUrl("/login")
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .successHandler(customAuthenticationSuccessHandler)
-                .failureHandler(customAuthenticationFailureHandler);
-
-        //配置登出
-        http.logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login.html");
+//        //配置登出
+//        http.logout()
+//                .logoutUrl("/logout")
+//                .logoutSuccessUrl("/login.html");
 
         http.authorizeRequests()
-                .antMatchers("/**").permitAll()
-                .antMatchers("/demo/test/test/**").permitAll()
-                .antMatchers("/test/**").permitAll()
-                .antMatchers("/api/public/**").permitAll()
-                .antMatchers("/login").permitAll()
+                .regexMatchers(permitUrlCollector.getPermitUrls().toArray(new String[0])).permitAll()
+                .antMatchers("/user/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(tokenRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
