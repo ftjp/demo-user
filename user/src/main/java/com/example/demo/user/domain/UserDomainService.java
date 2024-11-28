@@ -1,6 +1,7 @@
 package com.example.demo.user.domain;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import com.example.demo.user.domain.entity.Role;
 import com.example.demo.user.domain.entity.UserInfo;
 import com.example.demo.user.domain.entity.UserRole;
@@ -9,9 +10,7 @@ import com.example.demo.user.domain.service.UserInfoService;
 import com.example.demo.user.domain.service.UserRoleService;
 import com.example.demo.user.dto.RoleDto;
 import com.example.demo.user.dto.UserInfoDto;
-import com.example.demo.user.param.UserInfoParam;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -58,6 +57,9 @@ public class UserDomainService {
         UserInfoDto userInfoDto = BeanUtil.copyProperties(userInfo, UserInfoDto.class);
 
         List<UserRole> userRoleList = userRoleService.findByUserId(userInfo.getId());
+        if (CollUtil.isEmpty(userRoleList)) {
+            return userInfoDto;
+        }
         List<Long> roleIdList = userRoleList.stream().map(UserRole::getRoleId).collect(Collectors.toList());
         List<Role> roles = roleService.listByIds(roleIdList);
         userInfoDto.setRoleList(BeanUtil.copyToList(roles, RoleDto.class));

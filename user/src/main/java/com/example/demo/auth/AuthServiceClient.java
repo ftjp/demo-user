@@ -24,7 +24,7 @@ public class AuthServiceClient {
         paramMap.put("username", username);
         paramMap.put("password", password);
         paramMap.put("client_id", "user");
-        paramMap.put("client_secret", "123456");
+        paramMap.put("client_secret", "user");
         paramMap.put("scope", "all");
         String post = HttpUtil.post(AUTH_SERVICE_URL + "/oauth/token", paramMap);
 

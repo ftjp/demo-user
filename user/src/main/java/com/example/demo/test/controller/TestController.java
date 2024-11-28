@@ -1,5 +1,6 @@
 package com.example.demo.test.controller;
 
+import com.example.demo.config.Permit;
 import com.example.demo.infruastructure.common.BaseResult;
 import com.example.demo.infruastructure.enums.BaseResultEnum;
 import com.example.demo.infruastructure.exception.BaseCustomException;
@@ -47,6 +48,7 @@ public class TestController {
     }
 
 
+    @Permit
     @GetMapping("/test1")
     public BaseResult<String> test1() {
         log.info("test1接口");
