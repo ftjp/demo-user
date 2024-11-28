@@ -25,13 +25,12 @@ public class AuthController {
     @Resource
     private DataRedisOptionService dataRedisOptionService;
 
-
     @Permit
     @PostMapping("/user/login")
-    public void login(@RequestBody UserInfo userInfo, HttpServletResponse response) throws Exception {
+    public void login(@RequestBody UserInfo userInfo, HttpServletResponse response) {
 
         String accessToken = authServiceClient.requestAccessToken(userInfo.getUserName(), userInfo.getUserPwd());
-        dataRedisOptionService.set(accessToken, userInfo);
+        dataRedisOptionService.set(ResidConstanst.ACCESS_TOKEN_PREFIX + accessToken, userInfo.getUserName());
         String token = jwtTokenUtil.generateToken(accessToken);
         // 设置响应头
         response.addHeader("Authorization", "bearer " + token);
