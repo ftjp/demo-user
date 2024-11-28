@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 
 /**
  * description: 启动类
@@ -14,6 +15,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableFeignClients
 @SpringBootApplication(scanBasePackages = {"com.example.*"})
 @EnableAsync
+@EnableResourceServer
 public class UserApplication {
 
     public static void main(String[] args) {

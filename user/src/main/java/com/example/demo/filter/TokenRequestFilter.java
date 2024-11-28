@@ -1,5 +1,6 @@
 package com.example.demo.filter;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.example.demo.auth.ResidConstanst;
@@ -25,6 +26,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -42,11 +44,11 @@ public class TokenRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
+        Authentication authentication1 = SecurityContextHolder.getContext().getAuthentication();
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("bearer ")) {
-            String token = authHeader.substring(7);
-            if (StrUtil.isNotBlank(token) && jwtTokenUtil.validateToken(token)) {
-                String accessToken = jwtTokenUtil.getAccessTokenFromJWT(token);
+            String accessToken = authHeader.substring(7);
+            if (StrUtil.isNotBlank(accessToken)) {
                 UserDetails userDetails = getByAccessToken(accessToken);
                 if (userDetails != null) {
                     Authentication authentication = new UsernamePasswordAuthenticationToken(
@@ -61,14 +63,14 @@ public class TokenRequestFilter extends OncePerRequestFilter {
     private UserDetails getByAccessToken(String accessToken) throws UsernameNotFoundException {
         String userName = (String) dataRedisOptionService.get(ResidConstanst.ACCESS_TOKEN_PREFIX + accessToken);
         ExceptionUtil.throwIfTrue(userName == null, "token 过期");
-        UserInfoDto userInfoDto = (UserInfoDto) dataRedisOptionService.get(ResidConstanst.USER_DETAILS_PREFIX + userName);
+        Object object = dataRedisOptionService.get(ResidConstanst.USER_DETAILS_PREFIX + userName);
+        UserInfoDto userInfoDto = BeanUtil.copyProperties(object, UserInfoDto.class);
         if (userInfoDto == null) {
             userInfoDto = userDomainService.getExtendUserInfoByName(userName);
-
+            ExceptionUtil.throwIfTrue(userInfoDto == null, "用户不存在");
             dataRedisOptionService.set(ResidConstanst.USER_DETAILS_PREFIX + userName, userInfoDto);
         }
-        User user = new User(userInfoDto.getUserName(), userInfoDto.getUserPwd(),
-                getAuthorities(userInfoDto.getRoleList()));
+        User user = new User(userInfoDto.getUserName(), userInfoDto.getUserPwd(), getAuthorities(userInfoDto.getRoleList()));
         return user;
     }
 

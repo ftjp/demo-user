@@ -18,20 +18,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Resource
     private PermitUrlCollector permitUrlCollector;
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-
-        //禁用跨域保护
-        http.csrf().disable();
-        http.authorizeRequests()
-                .regexMatchers(permitUrlCollector.getPermitUrls().toArray(new String[0])).permitAll()
-                .antMatchers("/user/login").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .addFilterBefore(tokenRequestFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-    }
+    //     会被覆盖
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//
+//        //禁用跨域保护
+//        http.csrf().disable();
+//        http.authorizeRequests()
+//                .regexMatchers(permitUrlCollector.getPermitUrls().toArray(new String[0])).permitAll()
+//                .antMatchers("/user/login").permitAll()
+//                .anyRequest().authenticated()
+//                .and()
+//                .addFilterBefore(tokenRequestFilter, UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(tokenRequestFilter, UsernamePasswordAuthenticationFilter.class)
+//                .sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+//    }
 
     @Override
     public void configure(WebSecurity webSecurity) throws Exception {
