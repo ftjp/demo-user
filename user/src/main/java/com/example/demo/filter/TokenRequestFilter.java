@@ -61,10 +61,14 @@ public class TokenRequestFilter extends OncePerRequestFilter {
     private UserDetails getByAccessToken(String accessToken) throws UsernameNotFoundException {
         String userName = (String) dataRedisOptionService.get(ResidConstanst.ACCESS_TOKEN_PREFIX + accessToken);
         ExceptionUtil.throwIfTrue(userName == null, "token 过期");
-        UserInfoDto userInfoDto = userDomainService.getExtendUserInfoByName(userName);
+        UserInfoDto userInfoDto = (UserInfoDto) dataRedisOptionService.get(ResidConstanst.USER_DETAILS_PREFIX + userName);
+        if (userInfoDto == null) {
+            userInfoDto = userDomainService.getExtendUserInfoByName(userName);
+
+            dataRedisOptionService.set(ResidConstanst.USER_DETAILS_PREFIX + userName, userInfoDto);
+        }
         User user = new User(userInfoDto.getUserName(), userInfoDto.getUserPwd(),
                 getAuthorities(userInfoDto.getRoleList()));
-        dataRedisOptionService.set(ResidConstanst.USER_DETAILS_PREFIX + userName, user);
         return user;
     }
 

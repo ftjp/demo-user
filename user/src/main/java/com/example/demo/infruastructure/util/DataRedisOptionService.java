@@ -3,6 +3,7 @@ package com.example.demo.infruastructure.util;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -35,13 +37,15 @@ public class DataRedisOptionService {
 
     @Bean
     public RedisTemplate setRedisTemplate(LettuceConnectionFactory redisConnectionFactory) {
-        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-        GenericJackson2JsonRedisSerializer jackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer();
         this.redisTemplate = new RedisTemplate();
-        this.redisTemplate.setKeySerializer(stringRedisSerializer);
-        this.redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
-        this.redisTemplate.setHashKeySerializer(stringRedisSerializer);
-        this.redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
+        // 使用 GenericFastJsonRedisSerializer 替换默认序列化
+        GenericFastJsonRedisSerializer genericFastJsonRedisSerializer = new GenericFastJsonRedisSerializer();
+        // 设置key和value的序列化规则
+        redisTemplate.setKeySerializer(new GenericToStringSerializer<>(Object.class));
+        redisTemplate.setValueSerializer(genericFastJsonRedisSerializer);
+        // 设置hashKey和hashValue的序列化规则
+        redisTemplate.setHashKeySerializer(new GenericToStringSerializer<>(Object.class));
+        redisTemplate.setHashValueSerializer(genericFastJsonRedisSerializer);
         redisConnectionFactory.setShareNativeConnection(false);
         this.redisTemplate.setConnectionFactory(redisConnectionFactory);
         return this.redisTemplate;
