@@ -2,6 +2,8 @@ package com.example.demo.test.controller;
 
 import com.example.demo.config.Permit;
 import com.example.demo.infruastructure.common.BaseResult;
+import com.example.demo.infruastructure.common.UserContext.LocalUserContext;
+import com.example.demo.infruastructure.common.UserContext.UserInfoContext;
 import com.example.demo.infruastructure.enums.BaseResultEnum;
 import com.example.demo.infruastructure.exception.BaseCustomException;
 import com.example.demo.test.service.TestService;
@@ -34,7 +36,8 @@ public class TestController {
         try {
 
             System.out.println("*********************************");
-
+            UserInfoContext userInfo = LocalUserContext.getUserInfo();
+            log.info("userInfo:{}", userInfo);
             result.setData("test");
 
         } catch (BaseCustomException e) {

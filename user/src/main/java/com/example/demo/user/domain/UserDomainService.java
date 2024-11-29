@@ -2,6 +2,10 @@ package com.example.demo.user.domain;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import com.example.demo.auth.ResidConstanst;
+import com.example.demo.infruastructure.common.UserContext.UserInfoContext;
+import com.example.demo.infruastructure.util.DataRedisOptionService;
+import com.example.demo.infruastructure.util.ExceptionUtil;
 import com.example.demo.user.domain.entity.Role;
 import com.example.demo.user.domain.entity.UserInfo;
 import com.example.demo.user.domain.entity.UserRole;
@@ -31,6 +35,8 @@ public class UserDomainService {
     private RoleService roleService;
     @Resource
     private UserRoleService userRoleService;
+    @Resource
+    private DataRedisOptionService dataRedisOptionService;
 
 
     public UserInfoDto getUserInfoById(Long userId) {
@@ -40,7 +46,7 @@ public class UserDomainService {
 
     public UserInfoDto getExtendUserInfoById(Long userId) {
         UserInfo userInfo = userInfoService.findById(userId);
-        return getExtendUserInfo(userInfo);
+        return userInfo == null ? null : getExtendUserInfo(userInfo);
     }
 
     public UserInfoDto getUserInfoByName(String userName) {
@@ -50,7 +56,7 @@ public class UserDomainService {
 
     public UserInfoDto getExtendUserInfoByName(String userName) {
         UserInfo userInfo = userInfoService.findByName(userName);
-        return getExtendUserInfo(userInfo);
+        return userInfo == null ? null : getExtendUserInfo(userInfo);
     }
 
     public UserInfoDto getExtendUserInfo(UserInfo userInfo) {
@@ -65,6 +71,16 @@ public class UserDomainService {
         userInfoDto.setRoleList(BeanUtil.copyToList(roles, RoleDto.class));
 
         return userInfoDto;
+    }
+
+    public UserInfoContext buildUserContext(String userName) {
+
+        UserInfoDto userInfoDto = getExtendUserInfoByName(userName);
+        ExceptionUtil.throwIfTrue(userInfoDto == null, "用户不存在");
+        UserInfoContext userInfoContext = BeanUtil.copyProperties(userInfoDto, UserInfoContext.class);
+
+        dataRedisOptionService.set(ResidConstanst.USER_CONTEXT_PREFIX + userInfoContext.getUserName(), userInfoContext);
+        return userInfoContext;
     }
 
 }

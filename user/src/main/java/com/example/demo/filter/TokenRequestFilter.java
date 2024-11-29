@@ -26,7 +26,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -44,7 +43,6 @@ public class TokenRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        Authentication authentication1 = SecurityContextHolder.getContext().getAuthentication();
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("bearer ")) {
             String accessToken = authHeader.substring(7);
