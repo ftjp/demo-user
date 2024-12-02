@@ -2,7 +2,6 @@ package com.example.demo.test.service;
 
 import com.example.demo.infruastructure.util.DataRedisOptionService;
 import com.example.demo.infruastructure.util.DataRedisOptionUtil;
-import com.example.demo.user.domain.entity.UserInfo;
 import com.example.demo.user.dto.UserInfoDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,7 @@ import javax.annotation.Resource;
  */
 @Service
 @Slf4j
-public class TestService {
+public class RedisTestService {
 
     @Resource
     private DataRedisOptionUtil dataRedisOptionUtil;

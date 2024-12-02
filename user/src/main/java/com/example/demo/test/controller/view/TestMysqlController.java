@@ -1,9 +1,7 @@
 package com.example.demo.test.controller.view;
 
 import com.example.demo.infruastructure.common.BaseResult;
-import com.example.demo.test.service.MongoDbTestService;
 import com.example.demo.test.service.MysqlTestService;
-import com.example.demo.test.service.TestService;
 import com.example.demo.user.dto.UserInfoDto;
 import com.example.demo.user.param.UserInfoParam;
 import io.swagger.annotations.Api;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 
 @RestController
