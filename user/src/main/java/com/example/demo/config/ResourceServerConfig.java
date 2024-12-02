@@ -40,6 +40,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         http.authorizeRequests()
                 .regexMatchers(permitUrlCollector.getPermitUrls().toArray(new String[0])).permitAll()
                 .antMatchers("/user/login").permitAll()
+                .antMatchers("/user/test/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterAfter(tokenRequestFilter, UsernamePasswordAuthenticationFilter.class)
