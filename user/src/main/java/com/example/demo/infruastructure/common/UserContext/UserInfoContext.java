@@ -4,7 +4,7 @@ import com.example.demo.user.dto.RoleDto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -35,12 +35,12 @@ public class UserInfoContext {
     /**
      * 创建时间
      */
-    private LocalDate createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    private LocalDate updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 是否删除

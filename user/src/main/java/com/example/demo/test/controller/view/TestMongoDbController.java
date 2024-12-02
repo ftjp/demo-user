@@ -2,7 +2,6 @@ package com.example.demo.test.controller.view;
 
 import com.example.demo.infruastructure.common.BaseResult;
 import com.example.demo.test.service.MongoDbTestService;
-import com.example.demo.test.service.TestService;
 import com.example.demo.user.dto.UserInfoDto;
 import com.example.demo.user.param.UserInfoParam;
 import io.swagger.annotations.Api;
@@ -53,6 +52,15 @@ public class TestMongoDbController {
         UserInfoDto userInfoDto = mongoDbTestService.findByUsername();
         List<UserInfoDto> userInfoDtoList = mongoDbTestService.findByExample();
         result.setData(userInfoDto);
+        return result;
+    }
+
+    @PostMapping("/testMongoDb/updateByExample")
+    public BaseResult<Void> updateByExample() {
+        log.info("testMongoDb接口");
+        BaseResult<Void> result = new BaseResult<>();
+        result.setSuccess();
+        mongoDbTestService.updateByExample();
         return result;
     }
 

@@ -1,10 +1,5 @@
 package com.example.demo.user.domain.entity;
 
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.Date;
-
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -14,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 
 @Accessors(chain = true)
@@ -48,12 +45,12 @@ public class UserInfo implements Serializable {
     /**
      * 创建时间
      */
-    private LocalDate createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    private LocalDate updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 是否删除

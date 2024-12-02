@@ -3,15 +3,7 @@ package com.example.demo.user.dto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -42,12 +34,12 @@ public class UserInfoDto {
     /**
      * 创建时间
      */
-    private LocalDate createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    private LocalDate updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 是否删除
