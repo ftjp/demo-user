@@ -10,6 +10,7 @@ import cn.hutool.json.JSONUtil;
 import com.example.demo.infruastructure.common.BaseResult;
 import com.example.demo.infruastructure.util.DataRedisOptionService;
 import com.example.demo.infruastructure.util.ExceptionUtil;
+import com.example.demo.infruastructure.util.StringRedisOptionService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -26,6 +27,8 @@ public class AuthServiceClient {
 
     @Resource
     private DataRedisOptionService dataRedisOptionService;
+    @Resource
+    private StringRedisOptionService stringRedisOptionService;
 
 
     private final String AUTH_SERVICE_URL = "http://localhost:8081";
@@ -64,9 +67,14 @@ public class AuthServiceClient {
     public String refreshAccessToken(String accessToken) {
         ExceptionUtil.throwIfTrue(StrUtil.isBlank(accessToken), "无效的token");
         String userName = (String) dataRedisOptionService.get(ResidConstanst.ACCESS_TOKEN_PREFIX + accessToken);
-        String refreshToken = (String) dataRedisOptionService.get(ResidConstanst.ACCESS_TO_REFRESH_PREFIX + accessToken);
+        String realAccessToken = accessToken.replace("bearer ", "").trim();
+//        String refreshToken = (String) dataRedisOptionService.get(ResidConstanst.ACCESS_TO_REFRESH_PREFIX + realAccessToken);
+        // 由于token存的序列化问题，只能用 stringRedisOptionService
+        String refreshToken = stringRedisOptionService.get(ResidConstanst.ACCESS_TO_REFRESH_PREFIX + realAccessToken);
         ExceptionUtil.throwIfTrue(StrUtil.isBlank(userName), "无效的token");
-        return refreshAccessToken(userName, refreshToken);
+        String newAccessToken = refreshAccessToken(userName, refreshToken);
+        dataRedisOptionService.set(ResidConstanst.ACCESS_TOKEN_PREFIX + newAccessToken, userName);
+        return newAccessToken;
     }
 
 
