@@ -2,10 +2,10 @@ package com.example.demo.user.domain;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
-import com.example.demo.auth.ResidConstanst;
 import com.example.demo.infruastructure.common.UserContext.UserInfoContext;
 import com.example.demo.infruastructure.util.DataRedisOptionService;
 import com.example.demo.infruastructure.util.ExceptionUtil;
+import com.example.demo.user.auth.ResidConstanst;
 import com.example.demo.user.domain.entity.Role;
 import com.example.demo.user.domain.entity.UserInfo;
 import com.example.demo.user.domain.entity.UserRole;

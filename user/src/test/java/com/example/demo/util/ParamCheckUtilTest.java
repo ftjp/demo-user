@@ -1,10 +1,10 @@
 package com.example.demo.util;
 
 
+import com.example.demo.demo.task.domain.entity.RetryTask;
 import com.example.demo.infruastructure.enums.TaskStatusEnum;
 import com.example.demo.infruastructure.exception.BaseCustomException;
 import com.example.demo.infruastructure.util.ParamCheckUtil;
-import com.example.demo.task.domain.entity.RetryTask;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

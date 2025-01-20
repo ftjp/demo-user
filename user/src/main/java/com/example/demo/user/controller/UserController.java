@@ -1,8 +1,8 @@
 package com.example.demo.user.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.example.demo.config.Permit;
 import com.example.demo.infruastructure.common.BaseResult;
+import com.example.demo.infruastructure.config.Permit;
 import com.example.demo.user.domain.UserDomainService;
 import com.example.demo.user.dto.UserInfoDto;
 import com.example.demo.user.param.UserInfoParam;

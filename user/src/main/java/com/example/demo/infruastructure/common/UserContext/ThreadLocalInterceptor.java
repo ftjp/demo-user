@@ -1,8 +1,8 @@
 package com.example.demo.infruastructure.common.UserContext;
 
 import cn.hutool.core.util.StrUtil;
-import com.example.demo.auth.ResidConstanst;
 import com.example.demo.infruastructure.util.DataRedisOptionService;
+import com.example.demo.user.auth.ResidConstanst;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
