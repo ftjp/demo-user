@@ -1,11 +1,11 @@
 package com.example.demo.task.domain.handler.impl;
 
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.example.demo.infruastructure.enums.TaskTypeEnum;
 import com.example.demo.infruastructure.exception.BaseCustomException;
 import com.example.demo.task.domain.entity.RetryTask;
 import com.example.demo.task.domain.handler.TaskRetryService;
+import com.example.demo.task.domain.vo.ConsumerMqTaskInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
@@ -46,7 +46,8 @@ public class ConsumerMqTaskRetryImpl implements TaskRetryService {
                 if (annotation instanceof RocketMQMessageListener) {
                     RocketMQMessageListener rocketMQMessageListener = (RocketMQMessageListener) annotation;
                     String topic = rocketMQMessageListener.topic();
-                    this.consumerMqMap.put(topic, rocketMQListener);
+                    String consumerGroup = rocketMQMessageListener.consumerGroup();
+                    this.consumerMqMap.put(topic + "+" + consumerGroup, rocketMQListener);
                     break;
                 }
             }
@@ -54,15 +55,16 @@ public class ConsumerMqTaskRetryImpl implements TaskRetryService {
     }
 
     @Override
-    public void retry(RetryTask retryTask) {
-        // 根据不同的主题，执行不同的重试逻辑
-        JSONObject jsonObject = JSONUtil.parseObj(retryTask.getTaskInfo());
-        String topic = (String) jsonObject.get("topic");
-        RocketMQListener rocketMQListener = consumerMqMap.get(topic);
+    public void retry(RetryTask task) {
+        // 根据不同的主题+消费组，执行不同的重试逻辑
+        ConsumerMqTaskInfo consumerMqTaskInfo = JSONUtil.toBean(task.getTaskInfo(), ConsumerMqTaskInfo.class);
+        String topic = consumerMqTaskInfo.getTopic();
+        String consumerGroup = consumerMqTaskInfo.getConsumerGroup();
+        RocketMQListener rocketMQListener = consumerMqMap.get(topic + "+" + consumerGroup);
         if (rocketMQListener == null) {
             throw new BaseCustomException(String.format("消费mq消息失败，重试策略实现，不支持的消息主题:[%s]", topic));
         }
-        rocketMQListener.onMessage(retryTask.getTaskInfo());
+        rocketMQListener.onMessage(consumerMqTaskInfo.getMessage());
     }
 
 

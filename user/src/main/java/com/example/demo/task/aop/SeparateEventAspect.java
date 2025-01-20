@@ -2,7 +2,6 @@ package com.example.demo.task.aop;
 
 import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
-import com.example.demo.infruastructure.exception.BaseCustomException;
 import com.example.demo.task.application.TaskExecutorApplicationService;
 import com.example.demo.task.domain.handler.impl.SeparateEventTaskRetryImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -54,10 +53,6 @@ public class SeparateEventAspect {
             }
 
             log.error(String.format("[%s] error, [args]=%s, errorMsg = %s", signature.getName(), parameters, e.getMessage()));
-            // 当前是重试任务线程，只抛出异常，不重复保存任务
-            if (separateEventTaskRetry.getRetryThreadLoca()) {
-                throw new BaseCustomException(e.getMessage());
-            }
             taskExecutorApplicationService.addSeparateEventTaskAfterError(simpleName, signature.getName(), parametersClassName, parameters, e.getMessage());
         }
     }

@@ -21,6 +21,17 @@ public class TaskRetryHandler {
 
     private final Map<TaskTypeEnum, TaskRetryService> serviceMap;
 
+    private static final ThreadLocal<TaskTypeEnum> retryThreadLocal = new ThreadLocal<>();
+
+
+    private void setRetryThreadLocal(TaskTypeEnum taskType) {
+        retryThreadLocal.set(taskType);
+    }
+
+    public boolean notSaveRetryTask(TaskTypeEnum taskType) {
+        return taskType.equals(retryThreadLocal.get());
+    }
+
     /**
      * description: 自动注入所有实现 TaskRetryService 接口的方法
      *
@@ -42,7 +53,13 @@ public class TaskRetryHandler {
         if (service == null) {
             throw new BaseCustomException(String.format("未实现任务类型枚举类为[%s]的重试实现方法", TaskTypeEnum.fromCode(retryTask.getTaskType()).getName()));
         }
-        service.retry(retryTask);
+        try {
+            // 设置当前为重试任务线程，防止死循环（重试失败又新增重试任务）
+            setRetryThreadLocal(TaskTypeEnum.fromCode(retryTask.getTaskType()));
+            service.retry(retryTask);
+        } finally {
+            retryThreadLocal.remove();
+        }
     }
 
 
