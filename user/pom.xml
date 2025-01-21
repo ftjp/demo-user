@@ -56,7 +56,6 @@
         <pagehelper.version>5.2.0</pagehelper.version>
         <mysql-connectorr.version>8.0.26</mysql-connectorr.version>
 
-        <easypoi-base.version>4.4.0</easypoi-base.version>
         <aspose-cells.version>8.5.2</aspose-cells.version>
         <mybatis-plus-generator.version>3.5.3.1</mybatis-plus-generator.version>
         <common-data.version>1.0.0-SNAPSHOT</common-data.version>
@@ -364,6 +363,11 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>3.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>easyexcel</artifactId>
+            <version>3.3.2</version>
         </dependency>
         <!--  ************************** 工具包 *********************      -->
 
