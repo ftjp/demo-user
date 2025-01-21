@@ -2,15 +2,12 @@ package com.example.demo.demo.excel.domain.service;
 
 
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.alibaba.excel.annotation.format.DateTimeFormat;
 import com.alibaba.excel.annotation.format.NumberFormat;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.alibaba.excel.annotation.write.style.ContentFontStyle;
 import com.alibaba.excel.annotation.write.style.ContentRowHeight;
 import com.alibaba.excel.enums.BooleanEnum;
 import lombok.Data;
-import lombok.experimental.Accessors;
-import org.apache.commons.beanutils.converters.DateTimeConverter;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -26,7 +23,7 @@ public class ExcelDataExport implements Serializable {
      * id
      */
     @ColumnWidth(25)
-    @ExcelProperty(value = "id")
+    @ExcelProperty(value = "id", converter = ExcelDataConverter.class)
     private Long id;
 
     /**
@@ -37,7 +34,7 @@ public class ExcelDataExport implements Serializable {
     /**
      * 数字数据
      */
-    @ExcelProperty(value = "数字数据")
+    @ExcelProperty(value = "数字数据", converter = ExcelDataConverter.class)
     private Integer num;
     /**
      * 创建时间
