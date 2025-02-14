@@ -3,6 +3,7 @@ package com.example.demo.demo.database.service.es;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson.JSON;
+import com.example.demo.UserApplication;
 import com.example.demo.infruastructure.util.IdGenerator;
 import com.example.demo.user.dto.UserInfoDto;
 import com.example.demo.user.param.UserInfoParam;
@@ -17,6 +18,8 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.query.FetchSourceFilter;
@@ -34,6 +37,8 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class ElasticsearchTestService {
+
+    private final static Logger logger = LoggerFactory.getLogger(UserApplication.class);
 
     @Resource
     private RestHighLevelClient restHighLevelClient;
@@ -57,6 +62,8 @@ public class ElasticsearchTestService {
     }
 
     public UserInfoDto findByIdTest() {
+        logger.info("findByIdTest" + LocalDateTime.now());
+        logger.debug("findByIdTest" + LocalDateTime.now());
 //        userRepository.deleteAll();
 //        Optional<UserInfoEs> byId = userRepository.findById(1889859493598408704L);
         List<UserInfoEs> ljptest = userRepository.findByUserName("ljptest1");
